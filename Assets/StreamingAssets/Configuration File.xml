@@ -1,0 +1,36 @@
+<La24>
+  <AlertsTitle>Atención</AlertsTitle>
+  <UserAlerts>
+    <Alert1>Prohibase el ofrecimiento o venta de juegos de azar a menores de edad.</Alert1>
+    <Alert2>Jugar en exceso puede ser perjudicial para la salud.</Alert2>
+    <Alert3>Antes de jugar, debes apostar.</Alert3>
+  </UserAlerts>
+
+  <ScreenshotsDirectory>C:\Users\Andrelo\Pictures\Screenshots\La24</ScreenshotsDirectory>
+
+  <GenericTexts>
+    <GenericTransactionError>Contacte al administrador:</GenericTransactionError>
+  </GenericTexts>
+
+  <BetsTime>10</BetsTime>
+  <AlertTime>2</AlertTime>
+
+  <UrlLogin>http://casino-dev.ies-gaming.com/ggbies/api/authenticate</UrlLogin>
+  <UrlGeneric>http://casino-dev.ies-gaming.com/ggbies/api/v1/ggb</UrlGeneric>
+  <SocketURL>ws://192.168.1.240:8585</SocketURL>
+  <UserName>admin</UserName>
+  <UserPass>admin</UserPass>
+  <RememberUser>true</RememberUser>
+  <SocketBlock>false</SocketBlock>
+
+  <GameData>
+    <GPUser>indie</GPUser>
+    <System>web</System>
+    <SysOperator>wplay</SysOperator>
+    <Player>Pepito</Player>
+    <Token>D-E-F</Token>
+    <Game>L24</Game>
+    <MiniGame>DoubleUp</MiniGame>
+  </GameData>
+  <GamesToRestart>300</GamesToRestart>
+</La24>
