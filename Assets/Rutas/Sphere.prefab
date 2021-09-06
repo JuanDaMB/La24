@@ -1,0 +1,569 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5891439974662658255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5891439974662658250}
+  - component: {fileID: 5891439974662658251}
+  - component: {fileID: 5891439974662658252}
+  - component: {fileID: 5891439974662658253}
+  - component: {fileID: 5891439974662658254}
+  - component: {fileID: 5891439974662658249}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5891439974662658250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.1, y: 2, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5891439974662658251
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &5891439974662658252
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!135 &5891439974662658253
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  m_Material: {fileID: 13400000, guid: 1be563565380743aaa690045c4435107, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &5891439974662658254
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  serializedVersion: 2
+  m_Mass: 5
+  m_Drag: 0.005
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 2
+  m_Constraints: 0
+  m_CollisionDetection: 1
+--- !u!114 &5891439974662658249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5891439974662658255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d14b4e0b15c4e147a109f3615e6f22a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeScale: 4
+  MaxTime: 1
+  brakeSpeed: 0.1
+  brakeTime: 4
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _animator: {fileID: 0}
+  Datas:
+  - number: 1Rojo
+    data:
+    - startPos: {x: -2.9, y: 2, z: -4.5}
+      totalTime: 50
+      clip: 
+    - startPos: {x: -4.6, y: 2, z: -4.5}
+      totalTime: 70
+      clip: 
+  - number: 2Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -0.8}
+      totalTime: 38
+      clip: 
+    - startPos: {x: 1.4, y: 2, z: 4}
+      totalTime: 45
+      clip: 
+  - number: 3Rojo
+    data:
+    - startPos: {x: -0.7, y: 2, z: 4}
+      totalTime: 42
+      clip: 
+    - startPos: {x: 2.5, y: 2, z: -4.5}
+      totalTime: 40
+      clip: 
+  - number: 4Rojo
+    data:
+    - startPos: {x: 4.5, y: 2, z: -4.5}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 3.3, y: 2, z: -4.5}
+      totalTime: 44
+      clip: 
+  - number: 5Rojo
+    data:
+    - startPos: {x: 2.3, y: 2, z: 4}
+      totalTime: 32
+      clip: 
+    - startPos: {x: 3.6, y: 2, z: 4}
+      totalTime: 49
+      clip: 
+    - startPos: {x: 5, y: 2, z: -1.6}
+      totalTime: 54
+      clip: 
+  - number: 6Rojo
+    data:
+    - startPos: {x: -1, y: 2, z: 4}
+      totalTime: 58
+      clip: 
+    - startPos: {x: 4.7, y: 2, z: -4.5}
+      totalTime: 66
+      clip: 
+  - number: 7Rojo
+    data:
+    - startPos: {x: -4.6, y: 2.1, z: -4.5}
+      totalTime: 60
+      clip: 
+    - startPos: {x: -0.2, y: 2, z: 4}
+      totalTime: 48
+      clip: 
+  - number: 8Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -3.3}
+      totalTime: 42
+      clip: 
+    - startPos: {x: 4.6, y: 2, z: -4.5}
+      totalTime: 44
+      clip: 
+  - number: 9Rojo
+    data:
+    - startPos: {x: -0.5, y: 2, z: -4.5}
+      totalTime: 51
+      clip: 
+    - startPos: {x: -5, y: 2, z: 4}
+      totalTime: 50
+      clip: 
+  - number: 10Rojo
+    data:
+    - startPos: {x: 2.6, y: 2, z: 4}
+      totalTime: 47
+      clip: 
+    - startPos: {x: 5, y: 2, z: -0.4}
+      totalTime: 38
+      clip: 
+  - number: 11Rojo
+    data:
+    - startPos: {x: -5.3, y: 1.8, z: 2.5}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 4.1, y: 2, z: 4}
+      totalTime: 46
+      clip: 
+  - number: 12Rojo
+    data:
+    - startPos: {x: 3.4, y: 2, z: 4}
+      totalTime: 42
+      clip: 
+    - startPos: {x: 4.3, y: 2, z: 4}
+      totalTime: 43
+      clip: 
+  - number: 13Rojo
+    data:
+    - startPos: {x: 0.6, y: 2, z: 4}
+      totalTime: 42
+      clip: 
+    - startPos: {x: -5.3, y: 1.8, z: 0}
+      totalTime: 65
+      clip: 
+  - number: 14Rojo
+    data:
+    - startPos: {x: -1.73, y: 2, z: -4.5}
+      totalTime: 53
+      clip: 
+    - startPos: {x: 5, y: 2, z: 1.7}
+      totalTime: 58
+      clip: 
+  - number: 15Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -3.5}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 4.9, y: 2, z: -4}
+      totalTime: 56
+      clip: 
+  - number: 16Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -2.7}
+      totalTime: 58
+      clip: 
+    - startPos: {x: 3, y: 2, z: -4.5}
+      totalTime: 58
+      clip: 
+    - startPos: {x: -3.9, y: 2, z: -4.5}
+      totalTime: 60
+      clip: 
+  - number: 17Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -1.5}
+      totalTime: 50
+      clip: 
+    - startPos: {x: 5, y: 2, z: -2.3}
+      totalTime: 44
+      clip: 
+  - number: 18Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: -2.5}
+      totalTime: 50
+      clip: 
+    - startPos: {x: 4.7, y: 2, z: -4}
+      totalTime: 45
+      clip: 
+  - number: 19Rojo
+    data:
+    - startPos: {x: 5, y: 2, z: 0.1}
+      totalTime: 50
+      clip: 
+    - startPos: {x: 5, y: 2, z: -0.7}
+      totalTime: 48
+      clip: 
+  - number: 20Rojo
+    data:
+    - startPos: {x: 4.8, y: 2, z: -4.5}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 3.4, y: 2, z: -4.5}
+      totalTime: 54
+      clip: 
+  - number: 21Rojo
+    data:
+    - startPos: {x: 1.1, y: 2, z: 4}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 2, y: 2, z: -4.5}
+      totalTime: 40
+      clip: 
+  - number: 22Rojo
+    data:
+    - startPos: {x: 1.9, y: 2, z: -4.5}
+      totalTime: 38
+      clip: 
+    - startPos: {x: -2.8, y: 2, z: -4.5}
+      totalTime: 50
+      clip: 
+  - number: 23Rojo
+    data:
+    - startPos: {x: 5.4, y: 2, z: -4}
+      totalTime: 42
+      clip: 
+    - startPos: {x: 3.8, y: 2, z: -4.5}
+      totalTime: 46
+      clip: 
+  - number: 24Rojo
+    data:
+    - startPos: {x: 0.2, y: 2, z: 4}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 5, y: 2, z: 0.7}
+      totalTime: 48
+      clip: 
+  - number: 1Negro
+    data:
+    - startPos: {x: -4, y: 2, z: 4}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 0.9, y: 2, z: 4}
+      totalTime: 32
+      clip: 
+    - startPos: {x: 5, y: 2, z: 1.1}
+      totalTime: 36
+      clip: 
+  - number: 2Negro
+    data:
+    - startPos: {x: 0.1, y: 2, z: -4.5}
+      totalTime: 39
+      clip: 
+    - startPos: {x: 5, y: 2, z: -3.2}
+      totalTime: 50
+      clip: 
+  - number: 3Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -3.8}
+      totalTime: 38
+      clip: 
+    - startPos: {x: 4.3, y: 2, z: -4.5}
+      totalTime: 66
+      clip: 
+  - number: 4Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -1}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 4.7, y: 2, z: 4}
+      totalTime: 50
+      clip: 
+  - number: 5Negro
+    data:
+    - startPos: {x: 0.3, y: 2, z: 4}
+      totalTime: 45
+      clip: 
+    - startPos: {x: 2.1, y: 2, z: -4.5}
+      totalTime: 44
+      clip: 
+  - number: 6Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 2.2}
+      totalTime: 44
+      clip: 
+    - startPos: {x: 5, y: 2, z: 1.5}
+      totalTime: 44
+      clip: 
+  - number: 7Negro
+    data:
+    - startPos: {x: -1.9, y: 2, z: 4}
+      totalTime: 42
+      clip: 
+    - startPos: {x: 1.9, y: 2, z: 4}
+      totalTime: 49
+      clip: 
+  - number: 8Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -1.8}
+      totalTime: 52
+      clip: 
+    - startPos: {x: -4, y: 2.1, z: -4.5}
+      totalTime: 52
+      clip: 
+  - number: 9Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 0.2}
+      totalTime: 48
+      clip: 
+    - startPos: {x: 5, y: 2, z: -0.9}
+      totalTime: 36
+      clip: 
+  - number: 10Negro
+    data:
+    - startPos: {x: 0.9, y: 2, z: -4.5}
+      totalTime: 34
+      clip: 
+    - startPos: {x: 0.7, y: 2, z: -4.5}
+      totalTime: 52
+      clip: 
+    - startPos: {x: 2.6, y: 2, z: -4.5}
+      totalTime: 36
+      clip: 
+    - startPos: {x: 0.6, y: 2, z: -4.5}
+      totalTime: 46
+      clip: 
+  - number: 11Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -0.1}
+      totalTime: 52
+      clip: 
+    - startPos: {x: 5, y: 2, z: -2.4}
+      totalTime: 42
+      clip: 
+  - number: 12Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -3.9}
+      totalTime: 46
+      clip: 
+    - startPos: {x: -5.3, y: 1.8, z: 3}
+      totalTime: 50
+      clip: 
+  - number: 13Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 0}
+      totalTime: 48
+      clip: 
+    - startPos: {x: 5, y: 2, z: 2.6}
+      totalTime: 46
+      clip: 
+    - startPos: {x: 1.2, y: 2, z: -4.5}
+      totalTime: 44
+      clip: 
+  - number: 14Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 0.6}
+      totalTime: 47
+      clip: 
+    - startPos: {x: 3.1, y: 2, z: 4.2}
+      totalTime: 48
+      clip: 
+    - startPos: {x: -3, y: 2, z: 4}
+      totalTime: 50
+      clip: 
+  - number: 15Negro
+    data:
+    - startPos: {x: -1.71, y: 2, z: -4.5}
+      totalTime: 47
+      clip: 
+    - startPos: {x: 5, y: 2, z: 0.3}
+      totalTime: 43
+      clip: 
+  - number: 16Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 2.9}
+      totalTime: 46
+      clip: 
+    - startPos: {x: -5.3, y: 1.8, z: 0.5}
+      totalTime: 48
+      clip: 
+  - number: 17Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 3.5}
+      totalTime: 48
+      clip: 
+    - startPos: {x: -5.3, y: 1.8, z: 3.5}
+      totalTime: 50
+      clip: 
+  - number: 18Negro
+    data:
+    - startPos: {x: 4.9, y: 2, z: -4.5}
+      totalTime: 48
+      clip: 
+    - startPos: {x: 4.2, y: 2, z: -4.5}
+      totalTime: 50
+      clip: 
+    - startPos: {x: -2.3, y: 2, z: -4.5}
+      totalTime: 42
+      clip: 
+  - number: 19Negro
+    data:
+    - startPos: {x: 5, y: 2, z: 1}
+      totalTime: 48
+      clip: 
+    - startPos: {x: -3.3, y: 2, z: -4.5}
+      totalTime: 48
+      clip: 
+  - number: 20Negro
+    data:
+    - startPos: {x: 1.4, y: 2, z: -4.5}
+      totalTime: 52
+      clip: 
+    - startPos: {x: -0.2, y: 2, z: -4.5}
+      totalTime: 55
+      clip: 
+  - number: 21Negro
+    data:
+    - startPos: {x: 5, y: 2, z: -0.2}
+      totalTime: 39
+      clip: 
+    - startPos: {x: -5.3, y: 1.8, z: 1}
+      totalTime: 50
+      clip: 
+    - startPos: {x: 5, y: 2, z: -3}
+      totalTime: 58
+      clip: 
+  - number: 22Negro
+    data:
+    - startPos: {x: -1.4, y: 2, z: 4}
+      totalTime: 49
+      clip: 
+    - startPos: {x: 4.1, y: 2, z: -4.5}
+      totalTime: 48
+      clip: 
+  - number: 23Negro
+    data:
+    - startPos: {x: 0.5, y: 2, z: -4.5}
+      totalTime: 38
+      clip: 
+    - startPos: {x: 5, y: 2, z: -2.1}
+      totalTime: 42
+      clip: 
+  - number: 24Negro
+    data:
+    - startPos: {x: 3.1, y: 2, z: 4}
+      totalTime: 39
+      clip: 
+    - startPos: {x: 2.4, y: 2, z: 4}
+      totalTime: 52
+      clip: 
+  actualData:
+    startPos: {x: 0, y: 0, z: 0}
+    totalTime: 0
+    clip: 
+  ballName: 
