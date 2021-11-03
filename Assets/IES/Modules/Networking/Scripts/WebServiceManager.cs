@@ -162,13 +162,13 @@ namespace IndieLevelStudio.Networking
 
 		private void SetEnableLoading (bool enabled)
 		{
-			loaderText.text = string.Empty;
-			loaderText.enabled = enabled;
-
-			if (enabled)
-				LeanTween.delayedCall (loaderText.gameObject, loaderAppearTime, WriteLoaderWord);
-			else
-				LeanTween.cancel (loaderText.gameObject);
+			// loaderText.text = string.Empty;
+			// loaderText.enabled = enabled;
+			//
+			// if (enabled)
+			// 	LeanTween.delayedCall (loaderText.gameObject, loaderAppearTime, WriteLoaderWord);
+			// else
+			// 	LeanTween.cancel (loaderText.gameObject);
 
 		}
 

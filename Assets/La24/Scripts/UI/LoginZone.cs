@@ -55,7 +55,6 @@ namespace IndieLevelStudio.IES
 		private void LoginSucceded (LoginResponse resp)
 		{
 			GlobalObjects.BackendToken = "Bearer " + resp.id_token;
-			GlobalObjects.IsLoggedIn = true;
 
 			CallConfig ();
 		}
@@ -75,7 +74,7 @@ namespace IndieLevelStudio.IES
 		{
 			GlobalObjects.SaveTransactionAttributes (response);
 
-			GlobalObjects.IsRecoveryMode = response.msgDescrip.recovered.game != null? response.msgDescrip.recovered.game.Count > 0 : false;
+			GlobalObjects.IsRecoveryMode = response.msgDescrip.recovered.game != null && response.msgDescrip.recovered.game.Count > 0;
 
 			if(GlobalObjects.IsRecoveryMode)
 				GlobalObjects.RecoveryInfo = response.msgDescrip.recovered;

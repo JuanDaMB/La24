@@ -1,18 +1,11 @@
-﻿using IndieLevelStudio.Networking.Models;
+﻿using System;
+using IndieLevelStudio.Networking.Models;
+using UnityEngine;
 
-public sealed class GlobalObjects
+public static class GlobalObjects
 {
-	public static int UserNumberBets = 0;
-	public static bool IsPromocional = true;
-	public static bool PromocionalOffline = false;
-	public static bool ButtonRemoveToken = true;
-	public static bool ClickRemoveToken = true;
-	public static bool TokenStore = false;
-	public static bool ModeMobile = false;
-	public static bool DebugCreditStore = false;
-	public static bool IsMusicActive = true;
-	public static bool IsAudioActive = true;
 	public static bool IsModeAdmin = false;
+	public static bool IsMoney = false;
 	public static Message UserMessage;
 
 	public static string BackendToken;
@@ -23,9 +16,15 @@ public sealed class GlobalObjects
 	public static string token;
 	public static string game;
 	public static string miniGame;
-
-	public static bool IsLoggedIn;
-
+	
+	private static int _userMoney;
+	private static int _userMoneyReal;
+	private static int _userBet;
+	private static float _userGain;
+	
+	public static int Coin;
+	public static int Deno;
+	
 	public static int MinBet;
 	public static int MaxBet;
 
@@ -40,6 +39,51 @@ public sealed class GlobalObjects
 	public static RecoveryResponse RecoveryInfo;
 
 	public static int TotalGamesToRestart;
+	public static Action<int> UserBetChanged;
+	public static Action<int> UserMoneyChanged;
+	public static Action<float> UserGainChanged;
+	public static Action<int, string> BetResult;
+	public static GameState State;
+	public static GameState PreviousState;
+	public static float UserGain
+	{
+		get => _userGain;
+		set
+		{
+			_userGain = value;
+			UserGainChanged?.Invoke(_userGain);
+		}
+	}
+
+	public static int UserMoney
+	{
+		get => _userMoney;
+		set
+		{
+			_userMoney = value;
+			UserMoneyChanged?.Invoke(_userMoney);
+		}
+	}
+
+	public static int UserBet
+	{
+		get => _userBet;
+		set
+		{
+			_userBet = value;
+			UserBetChanged?.Invoke(_userBet);
+		}
+	}
+
+	public static int UserMoneyReal
+	{
+		get => _userMoneyReal;
+		set
+		{
+			_userMoneyReal = value;
+			UserMoney = value;
+		}
+	}
 
 	public static void SaveTransactionAttributes<T> (GenericTransaction<T> response) where T : class
 	{
@@ -50,4 +94,15 @@ public sealed class GlobalObjects
 		token = response.token;
 		game = response.game;
 	}
+}
+
+public enum GameState
+{
+	Bet,
+	Playing,
+	Pause,
+	ShowingResult,
+	Idle,
+	Instructions,
+	Cashout
 }
