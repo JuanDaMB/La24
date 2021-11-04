@@ -9603,7 +9603,7 @@ MonoBehaviour:
   reDoLastBet: {fileID: 1362053431}
   play: {fileID: 1287262040}
   cashout: {fileID: 534705635}
-  exit: {fileID: 0}
+  exit: {fileID: 388921308}
 --- !u!1 &339891657
 GameObject:
   m_ObjectHideFlags: 0
@@ -13411,7 +13411,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 279
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -21281,7 +21281,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 9.96, y: -0.4}
+  m_AnchoredPosition: {x: 9.959999, y: -0.4}
   m_SizeDelta: {x: -34.4, y: 51.57}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &915422187
@@ -39076,6 +39076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1793313889}
   - component: {fileID: 1793313890}
+  - component: {fileID: 1793313891}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -39113,11 +39114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54dc223cf6c4296449ba4337203cdd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bar: {fileID: 412028}
   _coinHandler: {fileID: 2083621842}
   _denominationHandler: {fileID: 301933396}
   _board: {fileID: 277157514}
-  _buttonZone: {fileID: 336933300}
   maxBetText: {fileID: 511383164}
   socket: {fileID: 516466903}
   CashoutContainer: {fileID: 3396922338749707306}
@@ -39126,9 +39125,30 @@ MonoBehaviour:
   canvasUI: {fileID: 918991585}
   winScreen: {fileID: 519875356}
   skipButton: {fileID: 1880583966}
+  _config: {fileID: 1793313891}
+  _cashoutHandler: {fileID: 3396922338749707308}
   animatorCamera: {fileID: 534669907}
   ball: {fileID: 636448270}
   display: {fileID: 131971191}
+--- !u!114 &1793313891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793313888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41946eb64f2e79742b142600114160e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bar: {fileID: 412028}
+  _coinHandler: {fileID: 2083621842}
+  _denominationHandler: {fileID: 301933396}
+  _board: {fileID: 277157514}
+  _buttonZone: {fileID: 336933300}
+  skipButton: {fileID: 1880583966}
+  ball: {fileID: 636448270}
 --- !u!1 &1794981432
 GameObject:
   m_ObjectHideFlags: 0
@@ -46571,6 +46591,88 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &2066979908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066979911}
+  - component: {fileID: 2066979910}
+  - component: {fileID: 2066979909}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &2066979909
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066979908}
+  m_Enabled: 1
+--- !u!20 &2066979910
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066979908}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_GateFitMode: 2
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 32
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &2066979911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066979908}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.9609323, y: 2.3455758, z: 0.2519066}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2073246610
 GameObject:
   m_ObjectHideFlags: 0
@@ -49093,6 +49195,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dd660916a49f6d409f2b8f963961c4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3396922338749707308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3396922338749707306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc52e7978e1eb764e97c9ef1eac32077, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  socket: {fileID: 516466903}
+  CashoutContainer: {fileID: 3396922338749707306}
 --- !u!4 &4077393019766212942
 Transform:
   m_ObjectHideFlags: 0

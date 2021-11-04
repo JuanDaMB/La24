@@ -7,6 +7,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public struct BetOrder
+{
+    private string _key;
+    private int _value, _index;
+    private BetType _type;
+
+    public BetOrder(string key, int value, int index, BetType type)
+    {
+        _key = key;
+        _value = value;
+        _index = index;
+        _type = type;
+    }
+
+    public string Key => _key;
+    public int Index => _index;
+
+    public int Value => _value;
+
+    public BetType betType => _type;
+}
+
+
 public class BetBoard : MonoBehaviour
 {
     [SerializeField] private List<BetBoardButton> _buttons;
@@ -18,8 +41,8 @@ public class BetBoard : MonoBehaviour
     private Dictionary<string, (int value, BetType type)> betValues;
     private Dictionary<string, (int value, BetType type)> lastBet;
 
-    private List<(string key, int value, int index, BetType type)> betOrder;
-    private List<(string key, int value, int index, BetType type)> lastBetOrder;
+    private List<BetOrder> betOrder;
+    private List<BetOrder> lastBetOrder;
 
     public Action<bool> onBet;
 
@@ -28,8 +51,8 @@ public class BetBoard : MonoBehaviour
     {
         betValues = new Dictionary<string, (int, BetType)>();
         lastBet = new Dictionary<string, (int, BetType)>();
-        betOrder = new List<(string key, int value, int index, BetType type)>();
-        lastBetOrder = new List<(string key, int value, int index, BetType type)>();
+        betOrder = new List<BetOrder>();
+        lastBetOrder = new List<BetOrder>();
         for (int i = 0; i < _buttons.Count; i++)
         {
             _buttons[i].Initialize(_blank,_color,_images[i], i, SetBetCoin);
@@ -66,32 +89,10 @@ public class BetBoard : MonoBehaviour
             return;
         }
 
-        foreach ((string key, int value, int index, BetType type) tuple in lastBetOrder)
+        foreach (BetOrder tuple in lastBetOrder)
         {
-            SetBetCoin(tuple.index,tuple.key,tuple.value, tuple.type);
+            SetBetCoin(tuple.Index,tuple.Key,tuple.Value, tuple.betType);
         }
-        // GlobalObjects.UserBet = 0;
-        // GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
-        // foreach ((string key, int value, int index) i in lastBetOrder)
-        // {
-        //     foreach (var data in coinDatas.Where(data => data.Value == i.value))
-        //     {
-        //         _buttons[i.index].SetImage(data.sprite, true);
-        //         break;
-        //     }
-        //     _buttons[i.index].SetText(lastBet[i.key].value.ToString());
-        // }
-        //
-        //
-        // betValues = lastBet.ToDictionary(t => t.Key, t => t.Value);
-        // betOrder = lastBetOrder.ToList();
-        //
-        // foreach (KeyValuePair<string,(int value, BetType type)> i in betValues)
-        // {
-        //     GlobalObjects.UserBet += i.Value.value*GlobalObjects.Deno;
-        // }
-        // GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
-        // onBet?.Invoke(true);
     }
     
     public void ClearBoard()
@@ -111,34 +112,34 @@ public class BetBoard : MonoBehaviour
     {
         if (betOrder.Count <= 0) return;
         
-        (string key, int value, int index, BetType type) value = betOrder[betOrder.Count-1];
+        BetOrder value = betOrder[betOrder.Count-1];
         
-        if (!betValues.ContainsKey(value.key)) return;
+        if (!betValues.ContainsKey(value.Key)) return;
         
         betOrder.RemoveAt(betOrder.Count-1);
-        betValues[value.key] = (betValues[value.key].value-value.value,betValues[value.key].type);
+        betValues[value.Key] = (betValues[value.Key].value-value.Value,betValues[value.Key].type);
         
-        GlobalObjects.UserBet -= value.value * GlobalObjects.Deno;
+        GlobalObjects.UserBet -= value.Value * GlobalObjects.Deno;
         GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
-        _buttons[value.index].SetText((betValues[value.key].value).ToString());
+        _buttons[value.Index].SetText((betValues[value.Key].value).ToString());
         
-        if (betValues[value.key].Item1 <= 0)
+        if (betValues[value.Key].Item1 <= 0)
         {
-            betValues.Remove(value.key);
-            _buttons[value.index].SetImage(null, false);
+            betValues.Remove(value.Key);
+            _buttons[value.Index].SetImage(null, false);
         }
         else
         {
             int coin = 0;
             for (int i = betOrder.Count -1; i >= 0 ; i--)
             {
-                if (betOrder[i].key != value.key) continue;
-                coin = betOrder[i].value;
+                if (betOrder[i].Key != value.Key) continue;
+                coin = betOrder[i].Value;
                 break;
             }
             foreach (var data in coinDatas.Where(data => data.Value == coin))
             {
-                _buttons[value.index].SetImage(data.sprite, true);
+                _buttons[value.Index].SetImage(data.sprite, true);
                 break;
             }
         }
@@ -151,14 +152,8 @@ public class BetBoard : MonoBehaviour
 
     private void SetBetCoin(int indexValue, string value, BetType type)
     {
-        if (GlobalObjects.UserBet + (GlobalObjects.Coin*GlobalObjects.Deno) > GlobalObjects.UserMoneyReal)
-        {
-            return;
-        }
-        if (GlobalObjects.UserBet + (GlobalObjects.Coin*GlobalObjects.Deno) > GlobalObjects.MaxBet)
-        {
-            return;
-        }
+        if (HasMoney()) return;
+        if (ValidBet()) return;
         
         onBet?.Invoke(true);
         if (!betValues.ContainsKey(value))
@@ -168,6 +163,38 @@ public class BetBoard : MonoBehaviour
         var valueTuple = betValues[value];
         valueTuple.value += GlobalObjects.Coin;
 
+        ApplyData(indexValue, valueTuple);
+
+        betValues[value] = valueTuple;
+        GlobalObjects.UserBet += GlobalObjects.Coin * GlobalObjects.Deno;
+        GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
+        betOrder.Add(new BetOrder(value, GlobalObjects.Coin, indexValue, type));
+    }
+
+
+    private void SetBetCoin(int indexValue, string value, int coinValue, BetType type)
+    {
+        if (HasMoney()) return;
+        if (ValidBet()) return;
+        
+        onBet?.Invoke(true);
+        if (!betValues.ContainsKey(value))
+        {
+            betValues.Add(value, (0,type));  
+        }
+        var valueTuple = betValues[value];
+        valueTuple.value += coinValue;
+
+        ApplyData(indexValue, valueTuple);
+        
+        betValues[value] = valueTuple;
+        GlobalObjects.UserBet += coinValue * GlobalObjects.Deno;
+        GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
+        betOrder.Add(new BetOrder(value, coinValue, indexValue, type));
+    }
+
+    private void ApplyData(int indexValue, (int value, BetType type) valueTuple)
+    {
         bool Assigned = false;
 
         foreach (CoinData data in coinDatas)
@@ -179,59 +206,23 @@ public class BetBoard : MonoBehaviour
                 break;
             }
         }
-        
+
         if (!Assigned)
         {
             _buttons[indexValue].SetImage(null, Assigned);
         }
+
         _buttons[indexValue].SetText((valueTuple.value).ToString());
-        
-        betValues[value] = valueTuple;
-        GlobalObjects.UserBet += GlobalObjects.Coin * GlobalObjects.Deno;
-        GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
-        betOrder.Add((value, GlobalObjects.Coin, indexValue, type));
     }
-    private void SetBetCoin(int indexValue, string value, int coinValue, BetType type)
+    
+    private static bool ValidBet()
     {
-        if (GlobalObjects.UserBet + (coinValue*GlobalObjects.Deno) > GlobalObjects.UserMoneyReal)
-        {
-            return;
-        }
-        if (GlobalObjects.UserBet + (GlobalObjects.Coin*GlobalObjects.Deno) > GlobalObjects.MaxBet)
-        {
-            return;
-        }
-        
-        onBet?.Invoke(true);
-        if (!betValues.ContainsKey(value))
-        {
-            betValues.Add(value, (0,type));  
-        }
-        var valueTuple = betValues[value];
-        valueTuple.value += coinValue;
+        return GlobalObjects.UserBet + (GlobalObjects.Coin * GlobalObjects.Deno) > GlobalObjects.MaxBet;
+    }
 
-        bool Assigned = false;
-
-        foreach (CoinData data in coinDatas)
-        {
-            if (data.Value == coinValue)
-            {
-                Assigned = true;
-                _buttons[indexValue].SetImage(data.sprite, Assigned);
-                break;
-            }
-        }
-        
-        if (!Assigned)
-        {
-            _buttons[indexValue].SetImage(null, Assigned);
-        }
-        _buttons[indexValue].SetText((valueTuple.value).ToString());
-        
-        betValues[value] = valueTuple;
-        GlobalObjects.UserBet += coinValue * GlobalObjects.Deno;
-        GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
-        betOrder.Add((value, coinValue, indexValue, type));
+    private static bool HasMoney()
+    {
+        return GlobalObjects.UserBet + (GlobalObjects.Coin * GlobalObjects.Deno) > GlobalObjects.UserMoneyReal;
     }
 }
 

@@ -108,7 +108,7 @@ public class LoginManager : MonoBehaviour
 
 		if (message == "La maquina se encuentra bloqueada")
 		{
-			gameManager.EnterCashoutMode(true);
+			gameManager._cashoutHandler.EnterCashoutMode(true);
 
 			return;
 		}

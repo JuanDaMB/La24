@@ -11,11 +11,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private TimeBar _bar;
+	public static GameManager Manager;
     [SerializeField] private CoinHandler _coinHandler;
     [SerializeField] private DenominationHandler _denominationHandler;
     [SerializeField] private BetBoard _board;
-    [SerializeField] private ButtonZone _buttonZone;
     [SerializeField] private TextMeshProUGUI maxBetText;
     [SerializeField] public SocketGame socket;
     [SerializeField] private GameObject CashoutContainer;
@@ -23,24 +22,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject blockerButtons, canvasUI;
     [SerializeField] private WinScreen winScreen;
     [SerializeField] private Button skipButton;
+    [SerializeField] private GameConfig _config;
+    public CashoutHandler _cashoutHandler;
     public Animator animatorCamera;
     public Bola ball;
     public MeshRenderer display;
     
     public void Start()
     {
-        _bar.OnEndTimer += EndBet;
-        _denominationHandler.currentDeno += DenoChanged;
-        _coinHandler.CoinChange += CoinChanged;
-        _board.onBet += StartBet;
-        _buttonZone.SuscribeClearBets(_board.ClearBoard);
-        _buttonZone.SuscribeclearLastBet(_board.ClearLast);
-        _buttonZone.SuscribeReDoLastBet(_board.ReDoBet);
-        _buttonZone.SuscribePlay(_bar.EndTime);
-        _buttonZone.SuscribeCashout(CashOut);
-        ball.OnCompleteMove += TerminarRecorrido;
-        skipButton.onClick.AddListener(SkipBallCameraRotation);
+	    if (Manager == null)
+	    {
+		    Manager = this;
+	    }
+	    else
+	    {
+		    Destroy(this);
+	    }
+	    _config.Configuracion(EndBet,DenoChanged,CoinChanged,StartBet,CashOut,TerminarRecorrido,SkipBallCameraRotation);
     }
+
     private void QuitGame()
     {
 	    socket.SendString("MENU");
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void ConfigureGame(float value)
     {
-	    _bar.SetMaxTime(value);
+	    _config.BarConfig(value);
 
 
 #if !UNITY_WEBGL
@@ -76,12 +76,13 @@ public class GameManager : MonoBehaviour
 		    switch (message)
 		    {
 			    case "BTN3":
-					   ConfirmCashout();
+				    _cashoutHandler.ConfirmCashout();
 				    break;
 			    case "BTN7":
-					   EndCashout();
+				    _cashoutHandler.EndCashout();
 				    break;
 		    }
+
 		    return;
 	    }
 		
@@ -159,75 +160,7 @@ public class GameManager : MonoBehaviour
 
     public void CashOut()
 	{
-		if (GlobalObjects.UserBet <= 0)
-		{
-			if (GlobalObjects.UserMoneyReal <= 0)
-			{
-				EnterCashoutMode (false);
-				if (socket.SocketRunning) {
-					socket.SendString("UNLOCK");
-				}
-				return;
-			}
-
-			CashoutContainer.SetActive(true);
-			GetBalance();
-			EnterCashoutMode (true);
-
-			if (socket.SocketRunning)
-			{
-				socket.SendString("BTN1");
-			}
-		}
-	}
-	
-	private void ContinueCashOut()
-	{
-		CashoutContainer.SetActive(false);
-		ConfirmCashout();
-	}
-
-	private void EndCashout()
-	{
-		CashoutContainer.SetActive(false);
-			
-		EnterCashoutMode (false);
-		
-		if (socket.SocketRunning) {
-			socket.SendString("UNLOCK");
-		}
-	}
-
-	private void ConfirmCashout()
-	{
-		GenericTransaction<CashOutRequest> request = new GenericTransaction<CashOutRequest> ();
-		request.msgName = "cashOut";
-		request.msgDescrip = new CashOutRequest ();
-
-		request.msgDescrip.deno = GlobalObjects.Deno;
-
-		EnterCashoutMode (true);
-		if (socket.SocketRunning) {
-			Debug.Log ("Sending cashout");
-			socket.SendString ("CASHOUT");
-		}
-
-		string json = JsonUtility.ToJson (request);
-		WebServiceManager.Instance.SendJsonData<GenericTransaction<CashOutResponse>> (XMLManager.UrlGeneric, json, "authorization", GlobalObjects.BackendToken, CashOutResponse, TransactionFailed);
-	}
-
-	private void CashOutResponse (GenericTransaction<CashOutResponse> response)
-	{
-		GlobalObjects.SaveTransactionAttributes (response);
-		EnterCashoutMode (true);
-	}
-
-	public void EnterCashoutMode (bool cashout)
-	{
-		GlobalObjects.IsCashOutMode = cashout;
-		blockerButtons.SetActive (GlobalObjects.IsCashOutMode);
-
-		Debug.Log ("Cash out mode: " + GlobalObjects.IsCashOutMode);
+		_cashoutHandler.CashOut();
 	}
 
 	public void GetBalance (Action onGetBalanceSucceded = null)
@@ -267,14 +200,7 @@ public class GameManager : MonoBehaviour
 
     public void StartBet(bool onBet)
     {
-        if (onBet)
-        {
-            _bar.StartTime();
-        }
-        else
-        {
-            _bar.EndTime();
-        }
+        _config.StartBet(onBet);
     }
 
     public void DenoChanged(int value)
