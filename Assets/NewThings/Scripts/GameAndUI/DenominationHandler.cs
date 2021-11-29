@@ -13,17 +13,19 @@ public class DenominationHandler : MonoBehaviour
     [SerializeField] private Color baseColor, selectedColor;
     [SerializeField] private TextMeshProUGUI textBase;
     [SerializeField] private List<TextMeshProUGUI> textOptions;
-    [SerializeField] private Button baseButton;
+    [SerializeField] private Button baseButton, returnButton;
     [SerializeField] private List<Button> options;
 
     public Action<int> currentDeno;
     private int index = 0;
     private float currentSpace = 0f;
-    
+    private bool isOpen = false, onBet;
     private void Awake()
     {
         currentSpace = minX;
+        isOpen = false;
         baseButton.onClick.AddListener(OpenDropdown);
+        returnButton.onClick.AddListener(CloseDropdown);
     }
 
     public void SetArray(List<int> newvalues)
@@ -44,9 +46,27 @@ public class DenominationHandler : MonoBehaviour
         options[0].onClick?.Invoke();
     }
 
+    public void OnBetState(bool betState)
+    {
+        onBet = betState;
+        if (onBet && isOpen)
+        {
+            CloseDropdown();
+        }
+    }
+    
     public void OpenDropdown()
     {
+        if (onBet)
+        {
+            return;
+        }
         StartCoroutine(OpencloseAnimation(true));
+    }
+
+    private void CloseDropdown()
+    {
+        SetDefault(GlobalObjects.Deno,index);
     }
 
     public void SetDefault(int value, int idx)
@@ -67,8 +87,10 @@ public class DenominationHandler : MonoBehaviour
 
     IEnumerator OpencloseAnimation(bool open)
     {
+        isOpen = open;
         baseGO.SetActive(!open);
         optionsGO.SetActive(open);
+        returnButton.gameObject.SetActive(open);
 
         baseButton.interactable = false;
         foreach (Button button in options)

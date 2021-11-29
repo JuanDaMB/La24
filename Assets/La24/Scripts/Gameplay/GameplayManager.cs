@@ -17,13 +17,6 @@ using IndieLevelStudio.Ruleta.Gameplay;
 using IndieLevelStudio.IES.SlotMinigames;
 using UnityEngine.UI;
 
-public enum NumberColor
-{
-	Red,
-	Black,
-	Green
-}
-
 public class GameplayManager : MonoBehaviour
 {
 	[SerializeField]
@@ -411,8 +404,8 @@ public class GameplayManager : MonoBehaviour
 		if (!PlayOnce)
 		{
 			PlayOnce = true;
-			PlaySound.audios.PlayFX(numberAsInt.ToString());
-			PlaySound.audios.PlayFX(color.ToString(), 1, PlaySound.audios.GetFxClipLength(numberAsInt.ToString()));
+			PlaySound.audios.PlayFX(numberSelected);
+			PlaySound.audios.PlayFX(color.ToString(), 1, PlaySound.audios.GetFxClipLength(numberSelected));
 		}
 
 		yield return new WaitForSeconds(2f);

@@ -9,6 +9,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+public enum NumberColor
+{
+	Red = 1,
+	Black = 0,
+	Green = 2
+}
+
+
 public class GameManager : MonoBehaviour
 {
 	public static GameManager Manager;
@@ -23,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private WinScreen winScreen;
     [SerializeField] private Button skipButton;
     [SerializeField] private GameConfig _config;
+    [SerializeField] private Estadisticas _estadisticas;
     public CashoutHandler _cashoutHandler;
     public Animator animatorCamera;
     public Bola ball;
@@ -38,7 +48,7 @@ public class GameManager : MonoBehaviour
 	    {
 		    Destroy(this);
 	    }
-	    _config.Configuracion(EndBet,DenoChanged,CoinChanged,StartBet,CashOut,TerminarRecorrido,SkipBallCameraRotation);
+	    _config.Configuracion(EndBet,DenoChanged,CoinChanged,SetOnBet,CashOut,QuitGame,ShowStatistics,TerminarRecorrido,SkipBallCameraRotation);
     }
 
     private void QuitGame()
@@ -48,10 +58,15 @@ public class GameManager : MonoBehaviour
 	    Application.Quit();
     }
 
+    public void ShowStatistics()
+    {
+	    _estadisticas.Show();
+    }
 
     public void ConfigureGame(float value)
     {
 	    _config.BarConfig(value);
+	    _estadisticas.SetUp();
 
 
 #if !UNITY_WEBGL
@@ -100,49 +115,10 @@ public class GameManager : MonoBehaviour
 				    CashOut();   
 			    }
 			    break;
-
-		    case "BTN2":
-			    TriggerPhysicButtonPressed (2);
-			    break;
-
-		    case "BTN3":
-			    TriggerPhysicButtonPressed (3);
-			    break;
-
-		    case "BTN4":
-			    TriggerPhysicButtonPressed (4);
-			    break;
-
 		    case "BTN5":
 			    //TriggerPhysicButtonPressed (5); //TODO revisar el boton
 			    break;
-
-		    case "BTN6":
-			    TriggerPhysicButtonPressed (6);
-			    break;
-
-		    case "BTN7":
-			    TriggerPhysicButtonPressed (7);
-			    break;
-
-		    case "BTN8":
-			    TriggerPhysicButtonPressed (8);
-			    break;
-
-		    case "BTN9":
-			    TriggerPhysicButtonPressed (9);
-			    break;
-
-		    case "BTN10":
-			    TriggerPhysicButtonPressed (10);
-			    break;
 	    }
-    }
-
-    private void TriggerPhysicButtonPressed (int button)
-    {
-	    // if (OnButtonPressed != null)
-		   //  OnButtonPressed (button);
     }
     private void SocketBlock (string socketError)
     {
@@ -152,10 +128,6 @@ public class GameManager : MonoBehaviour
     public void SetMaxBetValue ()
     {
         maxBetText.text = "Apuesta máxima $" + GlobalObjects.MaxBet.ToString ("N0");
-    }
-    public void RecoveryGame()
-    {
-        
     }
 
     public void CashOut()
@@ -198,9 +170,9 @@ public class GameManager : MonoBehaviour
         _denominationHandler.SetArray(deno);
     }
 
-    public void StartBet(bool onBet)
+    public void SetOnBet(bool onBet)
     {
-        _config.StartBet(onBet);
+        _config.SetOnBet(onBet);
     }
 
     public void DenoChanged(int value)
@@ -261,22 +233,27 @@ public class GameManager : MonoBehaviour
 	    return data;
     }
     
+    public void RecoveryGame()
+    {
+	    AfterBetResponse(GlobalObjects.RecoveryInfo.gnaResult, GlobalObjects.RecoveryInfo.idPlaysession,
+		    GlobalObjects.RecoveryInfo.userDeno, GlobalObjects.RecoveryInfo.gain);
+    }
     private void BetResponse (GenericTransaction<BetResponse> response)
     {
-	    StartCoroutine (AfterBetResponse (response));
+	    AfterBetResponse(response.msgDescrip.gnaResult, response.msgDescrip.idPlaysession, response.msgDescrip.deno,
+		    response.msgDescrip.gain);
     }
 
-    private IEnumerator AfterBetResponse (GenericTransaction<BetResponse> response)
+    private void AfterBetResponse (int gnaResult, int idPlaysession, int deno, float gain)
     {
 	    _board.ClearBoard();
 	    // yield return StartCoroutine (ScreenshotRecorder.SaveScreenshot (XMLManager.ScreenshotsDirectory, 0));
-
-	    yield return new WaitForEndOfFrame ();
+	    // yield return new WaitForEndOfFrame ();
 
 	    canvasUI.SetActive(false);
-	    ball.SetNumber(response.msgDescrip.gnaResult);
-	    GlobalObjects.idPlaysession = response.msgDescrip.idPlaysession;
-	    GlobalObjects.UserGain = response.msgDescrip.gain * response.msgDescrip.deno;
+	    ball.SetNumber(gnaResult);
+	    GlobalObjects.idPlaysession = idPlaysession;
+	    GlobalObjects.UserGain = gain * deno;
 	    winScreen.SetWinScreen(GlobalObjects.UserGain);
 
 	    StartGameplay();
@@ -287,11 +264,8 @@ public class GameManager : MonoBehaviour
 	    if (GlobalObjects.IsRecoveryMode)
 		    GlobalObjects.IsRecoveryMode = false;
 		
-	    // SelectStartPoint ();
 	    skipButton.gameObject.SetActive(true);
-	    animatorCamera.Play ("StartSorteo"); //TODO Camara iddle
-
-	    // UIController.Instance.EnableButtonOmit (true);
+	    animatorCamera.Play ("StartSorteo");
 	    blockerButtons.SetActive (false);
 	    ball.EstablecerMovimiento();
 
@@ -329,27 +303,17 @@ public class GameManager : MonoBehaviour
 		    colorString = "Verde";
 	    }
 
-	    //TODO RotarCamara
-	    // animatorPivotCamera.enabled = true;
-	    // animatorPivotCamera.Play ("Rotate");
 	    PlaySound.audios.PlayMusic("Lobby", true, 0.15f);
 	    display.material.mainTexture = Resources.Load("LCD_Display/" + numberSelected+""+colorString) as Texture;
 
 	    StartCoroutine (ShowFinalUI(numberAsInt,color));
     }
-
-    private void ShowResult ()
-    {
-	    // UIController.Instance.EnableButtonOmit (false);
-	    //TODO Camara quieta a display
-	    // animatorPivotCamera.enabled = false;
-    }
-
     private IEnumerator ShowFinalUI(int numberAsInt, NumberColor color)
     {
 	    skipButton.gameObject.SetActive(false);
 	    yield return new WaitForSeconds(0.5f);
 	    animatorCamera.Play ("MostrarLCD");
+	    _estadisticas.SumarDatos(numberAsInt, color);
 	    yield return new WaitForSeconds(0.5f);
 	    PlaySound.audios.PlayFX(numberAsInt.ToString());
 	    PlaySound.audios.PlayFX(color.ToString(), 1, PlaySound.audios.GetFxClipLength(numberAsInt.ToString()));
@@ -359,9 +323,6 @@ public class GameManager : MonoBehaviour
 
 	    winScreen.ShowScreen();
 	    yield return new WaitForSeconds(5f);
-	    //UIController.Instance.stadistics.SaveBet(new PreviousBet(numberSelected, color.ToString()));
-	    //UIController.Instance.ShowFinalScreen(ChosenBets, numberAsInt, color);
-	    
 	    EndGame();
     }
     

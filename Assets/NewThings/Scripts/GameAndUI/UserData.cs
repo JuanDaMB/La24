@@ -9,7 +9,7 @@ public class UserData : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI userMoney, userBet, userGain, resultNumber;
     [SerializeField] private Image resultColor;
-    [SerializeField] private Color rojo, verde, negro;
+    [SerializeField] private Sprite rojo, verde, negro;
     private void Awake()
     {
         GlobalObjects.UserBetChanged += SetUserBet;
@@ -23,13 +23,13 @@ public class UserData : MonoBehaviour
         switch (color)
         {
             case "Red":
-                resultColor.color = rojo;
+                resultColor.sprite = rojo;
                 break;
             case "Green":
-                resultColor.color = verde;
+                resultColor.sprite = verde;
                 break;
             case "Black":
-                resultColor.color = negro;
+                resultColor.sprite = negro;
                 break;
         }
 
@@ -38,16 +38,16 @@ public class UserData : MonoBehaviour
 
     private void SetUserMoney(int value)
     {
-        userMoney.text = value.ToString("N0");
+        userMoney.text = "$ "+value.ToString("N0");
     }
 
     private void SetUserBet(int value)
     {
-        userBet.text = value.ToString("N0");
+        userBet.text = "$ "+value.ToString("N0");
     }
 
     private void SetUserGain(float value)
     {
-        userGain.text = value.ToString("N0");
+        userGain.text = "$ "+value.ToString("N0");
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +11,12 @@ public class Opciones : MonoBehaviour
     [SerializeField] private ColorManager _colorManager;
 
     private int volume;
+
+
     public void ColorTheme(int color)
     {
         marco.position = colores[color].position;
-        //_colorManager.ChangeColor((SceneColor) color); TODO
+        _colorManager.ChangeColor((SceneColor) color);
     }
 
     public void SetVolume(int volume)

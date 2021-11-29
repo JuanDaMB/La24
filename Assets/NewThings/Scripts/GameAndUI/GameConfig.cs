@@ -14,7 +14,7 @@ public class GameConfig : MonoBehaviour
     [SerializeField] private ButtonZone _buttonZone;
     [SerializeField] private Button skipButton;
     public Bola ball;
-    public void Configuracion(Action EndBet, Action<int> DenoChanged, Action<int> CoinChanged, Action<bool> StartBet, Action CashOut, Action TerminarRecorrido, UnityAction SkipBallCameraRotation)
+    public void Configuracion(Action EndBet, Action<int> DenoChanged, Action<int> CoinChanged, Action<bool> StartBet, Action CashOut, Action QuitGame,Action stats, Action TerminarRecorrido,  UnityAction SkipBallCameraRotation)
     {
         _bar.OnEndTimer += EndBet;
         _denominationHandler.currentDeno += DenoChanged;
@@ -25,6 +25,8 @@ public class GameConfig : MonoBehaviour
         _buttonZone.SuscribeReDoLastBet(_board.ReDoBet);
         _buttonZone.SuscribePlay(_bar.EndTime);
         _buttonZone.SuscribeCashout(CashOut);
+        _buttonZone.SuscribeExit(QuitGame);
+        _buttonZone.SuscribeStats(stats);
         ball.OnCompleteMove += TerminarRecorrido;
         skipButton.onClick.AddListener(SkipBallCameraRotation);
     }
@@ -34,8 +36,9 @@ public class GameConfig : MonoBehaviour
         _bar.SetMaxTime(value);
     }
 
-    public void StartBet(bool onBet)
+    public void SetOnBet(bool onBet)
     {
+        _denominationHandler.OnBetState(onBet);
         if (onBet)
         {
             _bar.StartTime();

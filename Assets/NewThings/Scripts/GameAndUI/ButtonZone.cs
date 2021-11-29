@@ -12,6 +12,7 @@ public class ButtonZone : MonoBehaviour
     [SerializeField] private Button play;
     [SerializeField] private Button cashout;
     [SerializeField] private Button exit;
+    [SerializeField] private Button estadisticas;
     
     public void SuscribeClearBets(Action action)
     {
@@ -38,6 +39,11 @@ public class ButtonZone : MonoBehaviour
     public void SuscribeExit(Action action)
     {
         exit.onClick.AddListener(()=> action());
+    }
+
+    public void SuscribeStats(Action action)
+    {
+        estadisticas.onClick.AddListener(()=> action());
     }
     
 }

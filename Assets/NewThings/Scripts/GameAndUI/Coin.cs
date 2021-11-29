@@ -26,7 +26,7 @@ public class Coin : MonoBehaviour
     public void SetData(CoinData data, int index)
     {
         _coinData = data;
-        this._index = index;
+        _index = index;
         ChangeText();
         _image.sprite = data.sprite;
     }
@@ -38,6 +38,6 @@ public class Coin : MonoBehaviour
 
     public void ChangeText()
     {
-        _text.text = (_coinData.Value).ToString();
+        _text.text = (_coinData.Value*GlobalObjects.Deno).ToString();
     }
 }

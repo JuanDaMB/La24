@@ -10,6 +10,7 @@ public class TimeBar : MonoBehaviour
     [SerializeField] private Image _bar;
     [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private float maxTime;
+    [SerializeField] private Gradient _gradient;
     private float _time;
     private bool TimeRunning = false;
     public Action OnEndTimer;
@@ -17,6 +18,7 @@ public class TimeBar : MonoBehaviour
     private void SetPercentage(float value)
     {
         _bar.fillAmount = value;
+        _bar.color = _gradient.Evaluate(value);
     }
 
     private void SetTime(float value)
