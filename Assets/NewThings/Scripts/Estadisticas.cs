@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using IndieLevelStudio.Common;
+using IndieLevelStudio.Networking;
+using IndieLevelStudio.Networking.Models;
 using TMPro;
 using UnityEngine;
 
@@ -10,50 +13,58 @@ public class Estadisticas : MonoBehaviour
     [SerializeField] private EstadisticasBar[] barras;
     [SerializeField] private TextMeshProUGUI[] ultimos, calientes, frios;
     [SerializeField] private Color[] _colors;
-    private Queue<(NumberColor,int)> betDatas;
-    private Dictionary<(NumberColor, int), int> betValues;
 
-    public string PreviousBetString
-    {
-        get => PlayerPrefs.GetString("PREVIOUSS_BETS_JSON", string.Empty);
-        set => PlayerPrefs.SetString("PREVIOUSS_BETS_JSON", value);
-    }
+    private List<int> _last, _cold, _hot;
+
 
     public void SetUp()
     {
-        betDatas = new Queue<(NumberColor, int)>();
-        betValues = new Dictionary<(NumberColor, int), int>();
+        _last = new List<int>();
+        _cold = new List<int>();
+        _hot = new List<int>();
         foreach (EstadisticasBar bar in barras)
         {
             bar.SetUp();
         }
-        Dibujar();
-        // CargarDatos();
-    }
-
-    public void Show()
-    {
-        Dibujar();
-        gameObject.SetActive(true);
     }
 
     public void Hide()
     {
-        // GuardarDatos();
+        GlobalObjects.State = GlobalObjects.PreviousState;
         gameObject.SetActive(false);
     }
-    private void GuardarDatos()
+
+    public void StadisticasRequest()
     {
-        List<(NumberColor,int)> list = new List<(NumberColor, int)>(betDatas);
-        PreviousBetString = JsonUtility.ToJson(list);
+        GenericTransaction<StadisticsRequest> request = new GenericTransaction<StadisticsRequest>();
+        request.msgName = "getStat";
+        request.msgDescrip = new StadisticsRequest();
+
+        string json = JsonUtility.ToJson(request);
+
+        WebServiceManager.Instance.SendJsonData<GenericTransaction<StadisticsResponse>>(XMLManager.UrlGeneric, json,
+            "authorization", GlobalObjects.BackendToken, GetStatsResponse, null);
     }
 
-    private void CargarDatos()
+    private void GetStatsResponse(GenericTransaction<StadisticsResponse> response)
     {
-        if (string.IsNullOrEmpty(PreviousBetString)) return;
-        
-        List<(NumberColor,int)> list = new List<(NumberColor, int)>(JsonUtility.FromJson<List<(NumberColor,int)>>(PreviousBetString));
-        betDatas = new Queue<(NumberColor, int)>(list);
+        GlobalObjects.SaveTransactionAttributes(response);
+        Show(response.msgDescrip.last, response.msgDescrip.hot, response.msgDescrip.cold);
+    }
+
+    public void Show(List<int> last, List<int> hot, List<int> cold)
+    {
+        _last.Clear();
+        _hot.Clear();
+        _cold.Clear();
+
+        _last = last;
+        _hot = hot;
+        _cold = cold;
+
+        GlobalObjects.PreviousState = GlobalObjects.State;
+        GlobalObjects.State = GameState.Pause;
+        gameObject.SetActive(true);
         Dibujar();
     }
 
@@ -66,28 +77,29 @@ public class Estadisticas : MonoBehaviour
 
         int index = 0;
 
-        foreach ((NumberColor, int) data in betDatas)
+        for (int i = 0; i < _last.Count; i++)
         {
-            ultimos[index].text = data.Item2.ToString();
-            ultimos[index].color = _colors[(int)data.Item1];
-            if (data.Item1 == NumberColor.Green)
+            index = NumberColor(_last[_last.Count - i - 1]);
+            if (_last[_last.Count - i - 1] > 24)
             {
-                barras[data.Item2-1].AddValue(0);   
+                barras[_last[_last.Count - i - 1] - 25].AddValue(index % 2);
             }
             else
             {
-                barras[data.Item2-1].AddValue((int)data.Item1);   
+                barras[_last[_last.Count - i - 1] - 1].AddValue(index % 2);
             }
-            if (betValues.ContainsKey(data))
+        }
+
+
+        for (int i = 0; i < ultimos.Length && i < _last.Count; i++)
+        {
+            ultimos[i].color = _colors[NumberColor(_last[_last.Count - i - 1])];
+            if (_last[_last.Count - i - 1] > 24)
             {
-                betValues[data]++;
-            }
-            else
-            {
-                betValues.Add(data,1);
+                _last[_last.Count - i - 1] -= 24;
             }
 
-            index++;
+            ultimos[i].text = _last[_last.Count - i - 1].ToString();
         }
 
         foreach (EstadisticasBar bar in barras)
@@ -95,32 +107,37 @@ public class Estadisticas : MonoBehaviour
             bar.Draw();
         }
 
-        index = 0;
-        foreach (KeyValuePair<(NumberColor, int),int> pair in betValues.OrderByDescending(t => t.Value).Take(calientes.Length))
+        for (int i = 0; i < _hot.Count; i++)
         {
-            calientes[index].text = pair.Key.Item2.ToString();
-            calientes[index].color = _colors[(int)pair.Key.Item1];
-            index++;
+            calientes[i].color = _colors[NumberColor(_hot[i])];
+
+            if (_hot[i] > 24)
+            {
+                _hot[i] -= 24;
+            }
+
+            calientes[i].text = _cold[i].ToString();
         }
 
-        index = 0;
-        foreach (KeyValuePair<(NumberColor, int),int> pair in betValues.OrderBy(t => t.Value).Take(frios.Length))
+        for (int i = 0; i < _cold.Count; i++)
         {
-            frios[index].text = pair.Key.Item2.ToString();
-            frios[index].color = _colors[(int)pair.Key.Item1];
-            index++;
+            frios[i].color = _colors[NumberColor(_cold[i])];
+            if (_cold[i] > 24)
+            {
+                _cold[i] -= 24;
+            }
+
+            frios[i].text = _cold[i].ToString();
         }
     }
 
-    public void SumarDatos(int numberAsInt, NumberColor color)
+    private int NumberColor(int number)
     {
-        betValues.Clear();
-        betDatas.Enqueue((color,numberAsInt));
-        if (betDatas.Count >ultimos.Length)
+        if (number % 24 == 0 || number % 24 == 1)
         {
-            betDatas.Dequeue();
+            return 2;
         }
-        // GuardarDatos();
-        Dibujar();
+
+        return number > 24 ? 0 : 1;
     }
 }

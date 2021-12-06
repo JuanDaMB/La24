@@ -9,9 +9,27 @@ public class Sonido : MonoBehaviour
     [SerializeField] private AudioMixer _mixer;
     [SerializeField] private Image _slider;
 
-    public void SetVolume(float value)
+    private float volume;
+    public void StepVolume(float step)
     {
-        _mixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
-        _slider.fillAmount = value;
+        volume += step;
+        SetVolume(volume);
+    }
+
+    public void SetVolume(float volume)
+    {
+        this.volume = volume;
+        if (this.volume <= 0f)
+        {
+            this.volume = 0.0001f;
+        }
+
+        if (this.volume >= 1f)
+        {
+            this.volume = 1f;
+        }
+        _slider.fillAmount = this.volume;
+
+        _mixer.SetFloat("MusicVol", Mathf.Log10(this.volume)*20);
     }
 }

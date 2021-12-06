@@ -7,9 +7,12 @@ public class ColorManager : MonoBehaviour
 {
     [SerializeField] private List<Image> objects;
     [SerializeField] private List<Sprite> azul, verde;
+    [SerializeField] private UserData Data;
+
 
     public void ChangeColor(SceneColor currentColor)
     { 
+        Data.ChangeColor(currentColor);
         for (int i = 0; i < objects.Count; i++)
         {
             switch (currentColor)

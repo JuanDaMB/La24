@@ -102,6 +102,7 @@ public class BetBoard : MonoBehaviour
         foreach (BetBoardButton button in _buttons)
         {
             button.ClearData();
+            button.UnblockConnections();
         }
         betValues.Clear();
         betOrder.Clear();
@@ -127,6 +128,7 @@ public class BetBoard : MonoBehaviour
         {
             betValues.Remove(value.Key);
             _buttons[value.Index].SetImage(null, false);
+            _buttons[value.Index].UnblockConnections();
         }
         else
         {
@@ -163,12 +165,20 @@ public class BetBoard : MonoBehaviour
         var valueTuple = betValues[value];
         valueTuple.value += GlobalObjects.Coin;
 
-        ApplyData(indexValue, valueTuple);
+        ApplyData(indexValue, valueTuple, GlobalObjects.Coin);
 
         betValues[value] = valueTuple;
         GlobalObjects.UserBet += GlobalObjects.Coin * GlobalObjects.Deno;
         GlobalObjects.UserMoney = GlobalObjects.UserMoneyReal - GlobalObjects.UserBet;
         betOrder.Add(new BetOrder(value, GlobalObjects.Coin, indexValue, type));
+    }
+
+    public void SetEnabled()
+    {
+        foreach (BetBoardButton button in _buttons)
+        {
+            button.EnableGame();
+        }
     }
 
 
@@ -185,7 +195,7 @@ public class BetBoard : MonoBehaviour
         var valueTuple = betValues[value];
         valueTuple.value += coinValue;
 
-        ApplyData(indexValue, valueTuple);
+        ApplyData(indexValue, valueTuple, coinValue);
         
         betValues[value] = valueTuple;
         GlobalObjects.UserBet += coinValue * GlobalObjects.Deno;
@@ -193,13 +203,13 @@ public class BetBoard : MonoBehaviour
         betOrder.Add(new BetOrder(value, coinValue, indexValue, type));
     }
 
-    private void ApplyData(int indexValue, (int value, BetType type) valueTuple)
+    private void ApplyData(int indexValue, (int value, BetType type) valueTuple, int CoinValue)
     {
         bool Assigned = false;
 
         foreach (CoinData data in coinDatas)
         {
-            if (data.Value == GlobalObjects.Coin)
+            if (data.Value == CoinValue)
             {
                 Assigned = true;
                 _buttons[indexValue].SetImage(data.sprite, Assigned);
@@ -217,6 +227,7 @@ public class BetBoard : MonoBehaviour
     
     private static bool ValidBet()
     {
+        int BetOnNumber = 0;
         return GlobalObjects.UserBet + (GlobalObjects.Coin * GlobalObjects.Deno) > GlobalObjects.MaxBet;
     }
 

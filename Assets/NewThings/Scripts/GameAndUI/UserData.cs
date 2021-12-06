@@ -7,9 +7,44 @@ using UnityEngine.UI;
 
 public class UserData : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI userMoney, userBet, userGain, resultNumber;
+    [SerializeField] private TextMeshProUGUI userMoney, userBet, userGain, resultNumber, symbol1,symbol2,symbol3;
     [SerializeField] private Image resultColor;
     [SerializeField] private Sprite rojo, verde, negro;
+    [SerializeField] private Image currencyButton;
+    [SerializeField] private Sprite currencyAzul, currencyVerde, moneyAzul, moneyVerde;
+    [SerializeField] private SceneColor _color;
+
+    public void ChangeColor(SceneColor color)
+    {
+        _color = color;
+        switch (color)
+        {
+            case SceneColor.Azul:
+                currencyButton.sprite = GlobalObjects.IsMoney ? moneyAzul : currencyAzul;
+                break;
+            case SceneColor.Verde:
+                currencyButton.sprite = GlobalObjects.IsMoney ? moneyVerde : currencyVerde;
+                break;
+        }  
+    }
+
+    public void ChangeCurrency()
+    {
+        GlobalObjects.IsMoney = !GlobalObjects.IsMoney;
+        if (GlobalObjects.IsMoney)
+        {
+            symbol1.text = "$";
+            symbol2.text = "$";
+            symbol3.text = "$";
+        }
+        else
+        {
+            symbol1.text = "¢";
+            symbol2.text = "¢";
+            symbol3.text = "¢";
+        }
+        ChangeColor(_color);
+    }
     private void Awake()
     {
         GlobalObjects.UserBetChanged += SetUserBet;
@@ -38,16 +73,16 @@ public class UserData : MonoBehaviour
 
     private void SetUserMoney(int value)
     {
-        userMoney.text = "$ "+value.ToString("N0");
+        userMoney.text = GlobalObjects.IsMoney ? value.ToString("N0") : (value/GlobalObjects.Deno).ToString("N0");
     }
 
     private void SetUserBet(int value)
     {
-        userBet.text = "$ "+value.ToString("N0");
+        userBet.text = GlobalObjects.IsMoney ? value.ToString("N0") : (value/GlobalObjects.Deno).ToString("N0");
     }
 
     private void SetUserGain(float value)
     {
-        userGain.text = "$ "+value.ToString("N0");
+        userGain.text = GlobalObjects.IsMoney ? value.ToString("N0") : (value/GlobalObjects.Deno).ToString("N0");
     }
 }

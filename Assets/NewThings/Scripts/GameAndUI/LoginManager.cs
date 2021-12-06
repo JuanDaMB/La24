@@ -97,6 +97,9 @@ public class LoginManager : MonoBehaviour
 
 		GlobalObjects.UserMoneyReal = response.msgDescrip.balance + response.msgDescrip.bonusNonrestricted +
 		                          response.msgDescrip.bonusRestricted;
+
+		gameManager.EnableBoard();
+		GlobalObjects.IsMoney = true;
 		
 		if (GlobalObjects.IsRecoveryMode)
 			gameManager.RecoveryGame();

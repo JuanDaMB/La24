@@ -38,6 +38,6 @@ public class Coin : MonoBehaviour
 
     public void ChangeText()
     {
-        _text.text = (_coinData.Value*GlobalObjects.Deno).ToString();
+        _text.text = (_coinData.Value).ToString();
     }
 }

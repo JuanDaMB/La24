@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Button skipButton;
     [SerializeField] private GameConfig _config;
     [SerializeField] private Estadisticas _estadisticas;
+    [SerializeField] private Camera main;
     public CashoutHandler _cashoutHandler;
     public Animator animatorCamera;
     public Bola ball;
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowStatistics()
     {
-	    _estadisticas.Show();
+	    _estadisticas.StadisticasRequest();
     }
 
     public void ConfigureGame(float value)
@@ -185,6 +186,11 @@ public class GameManager : MonoBehaviour
     {
         GlobalObjects.Coin = value;
     }
+
+    public void EnableBoard()
+    {
+	    _board.SetEnabled();
+    }
     public void SkipBallCameraRotation ()
     {
 	    skipButton.gameObject.SetActive(false);
@@ -247,6 +253,7 @@ public class GameManager : MonoBehaviour
     private void AfterBetResponse (int gnaResult, int idPlaysession, int deno, float gain)
     {
 	    _board.ClearBoard();
+	    main.enabled = true;
 	    // yield return StartCoroutine (ScreenshotRecorder.SaveScreenshot (XMLManager.ScreenshotsDirectory, 0));
 	    // yield return new WaitForEndOfFrame ();
 
@@ -313,7 +320,6 @@ public class GameManager : MonoBehaviour
 	    skipButton.gameObject.SetActive(false);
 	    yield return new WaitForSeconds(0.5f);
 	    animatorCamera.Play ("MostrarLCD");
-	    _estadisticas.SumarDatos(numberAsInt, color);
 	    yield return new WaitForSeconds(0.5f);
 	    PlaySound.audios.PlayFX(numberAsInt.ToString());
 	    PlaySound.audios.PlayFX(color.ToString(), 1, PlaySound.audios.GetFxClipLength(numberAsInt.ToString()));
@@ -340,6 +346,7 @@ public class GameManager : MonoBehaviour
     {
 	    GlobalObjects.UserMoneyReal = response.msgDescrip.balance + response.msgDescrip.bonusNonrestricted + response.msgDescrip.bonusRestricted;
 	    canvasUI.SetActive(true);
+	    main.enabled = false;
 	    winScreen.gameObject.SetActive(false);
     }
 

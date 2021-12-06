@@ -5,7 +5,7 @@ using UnityEngine;
 public static class GlobalObjects
 {
 	public static bool IsModeAdmin = false;
-	public static bool IsMoney = false;
+	public static bool isMoney = false;
 	public static Message UserMessage;
 
 	public static string BackendToken;
@@ -43,6 +43,19 @@ public static class GlobalObjects
 	public static Action<int> UserMoneyChanged;
 	public static Action<float> UserGainChanged;
 	public static Action<int, string> BetResult;
+
+	public static bool IsMoney
+	{
+		get => isMoney;
+		set
+		{
+			isMoney = value;
+			UserGainChanged?.Invoke(_userGain);
+			UserMoneyChanged?.Invoke(_userMoney);
+			UserBetChanged?.Invoke(_userBet);
+		}
+	}
+
 	public static GameState State;
 	public static GameState PreviousState;
 	public static float UserGain
